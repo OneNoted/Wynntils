@@ -100,7 +100,6 @@ import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MantleShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
-import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.RaidProgressFeature;
 import com.wynntils.features.overlays.ScoreboardOverlayFeature;
@@ -117,7 +116,6 @@ import com.wynntils.features.overlays.TowerEffectOverlayFeature;
 import com.wynntils.features.overlays.TowerStatsFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
-import com.wynntils.features.players.HadesFeature;
 import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
@@ -311,7 +309,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new MantleShieldTrackerOverlayFeature());
         registerFeature(new NpcDialogueFeature());
         registerFeature(new ObjectivesOverlayFeature());
-        registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new RaidProgressFeature());
         registerFeature(new ScoreboardOverlayFeature());
@@ -331,7 +328,6 @@ public final class FeatureManager extends Manager {
         // region players
         registerFeature(new AutoJoinPartyFeature());
         registerFeature(new CustomNametagRendererFeature());
-        registerFeature(new HadesFeature());
         registerFeature(new PartyManagementScreenFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());

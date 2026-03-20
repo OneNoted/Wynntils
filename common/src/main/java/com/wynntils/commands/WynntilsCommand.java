@@ -18,7 +18,6 @@ import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
-import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
 import com.wynntils.screens.secrets.SecretsScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.type.UpdateResult;
@@ -87,7 +86,6 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("downloads").executes(this::downloads))
-                .then(Commands.literal("gearsharing").executes(this::openGearSharingSettings))
                 .then(Commands.literal("guildmap").executes(this::openGuildMap))
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("map").executes(this::openMap))
@@ -175,11 +173,6 @@ public class WynntilsCommand extends Command {
                         false);
 
         Models.Player.loadSelf();
-        return 1;
-    }
-
-    private int openGearSharingSettings(CommandContext<CommandSourceStack> commandSourceStackCommandContext) {
-        Managers.TickScheduler.scheduleNextTick(() -> McUtils.setScreen(GearSharingSettingsScreen.create(null)));
         return 1;
     }
 

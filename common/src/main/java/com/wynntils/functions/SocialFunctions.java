@@ -8,10 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
-import net.minecraft.network.chat.Component;
 
 public class SocialFunctions {
     public static class FriendsFunction extends Function<Integer> {
@@ -68,19 +66,6 @@ public class SocialFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("player", String.class, null)));
-        }
-    }
-
-    public static class WynntilsRoleFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            WynntilsUser player = Models.Player.getWynntilsUser(McUtils.player());
-            if (player == null) return "";
-
-            Component component = player.accountType().getComponent();
-            if (component == null) return "";
-
-            return component.getString();
         }
     }
 

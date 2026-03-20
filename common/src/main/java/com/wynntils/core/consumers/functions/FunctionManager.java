@@ -22,7 +22,6 @@ import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.GuildFunctions;
-import com.wynntils.functions.HadesPartyFunctions;
 import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
@@ -587,12 +586,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new GuildFunctions.IsGuildMemberFunction());
         registerFunction(new GuildFunctions.ObjectiveStreakFunction());
 
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberHealthFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberLocationFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberManaFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberNameFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberUuidFunction());
-
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
         registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
         registerFunction(new HorseFunctions.CappedHorseXpFunction());
@@ -717,8 +710,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.PartyMembersFunction());
         registerFunction(new SocialFunctions.PlayerNameFunction());
         registerFunction(new SocialFunctions.PlayerUuidFunction());
-        registerFunction(new SocialFunctions.WynntilsRoleFunction());
-
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
         registerFunction(new SpellFunctions.MantleShieldCountFunction());

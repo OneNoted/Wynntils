@@ -101,19 +101,19 @@ public class MainMapFeature extends Feature {
     private final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
 
     @Persisted
-    public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
+    public final HiddenConfig<Boolean> renderRemoteFriendPlayers = new HiddenConfig<>(true);
 
     @Persisted
-    public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
+    public final HiddenConfig<Boolean> renderRemotePartyPlayers = new HiddenConfig<>(true);
 
     @Persisted
-    public final Config<Boolean> renderRemoteGuildPlayers = new Config<>(true);
+    public final HiddenConfig<Boolean> renderRemoteGuildPlayers = new HiddenConfig<>(true);
 
     @Persisted
-    public final Config<HealthTexture> remotePlayerHealthTexture = new Config<>(HealthTexture.A);
+    public final HiddenConfig<HealthTexture> remotePlayerHealthTexture = new HiddenConfig<>(HealthTexture.A);
 
     @Persisted
-    public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
+    public final HiddenConfig<TextShadow> remotePlayerNameShadow = new HiddenConfig<>(TextShadow.OUTLINE);
 
     @Persisted
     public final Config<Boolean> holdGuildMapOpen = new Config<>(true);

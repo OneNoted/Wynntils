@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.hades.type.PlayerRelation;
@@ -77,16 +78,16 @@ public class MinimapOverlay extends Overlay {
     private final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
     @Persisted
-    private final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
+    private final HiddenConfig<Boolean> renderRemoteFriendPlayers = new HiddenConfig<>(true);
 
     @Persisted
-    private final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
+    private final HiddenConfig<Boolean> renderRemotePartyPlayers = new HiddenConfig<>(true);
 
     @Persisted
-    private final Config<Boolean> renderRemoteGuildPlayers = new Config<>(true);
+    private final HiddenConfig<Boolean> renderRemoteGuildPlayers = new HiddenConfig<>(true);
 
     @Persisted
-    public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
+    public final HiddenConfig<Float> remotePlayersHeadScale = new HiddenConfig<>(0.4f);
 
     public MinimapOverlay() {
         super(
