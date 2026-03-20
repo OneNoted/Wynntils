@@ -92,13 +92,11 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("map").executes(this::openMap))
                 .then(Commands.literal("menu").executes(this::openMenu))
-                .then(Commands.literal("reauth").executes(this::reauth))
                 .then(Commands.literal("refetch").executes(this::refetch))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("rescan").executes(this::rescan))
                 .then(Commands.literal("secrets").executes(this::secrets))
                 .then(Commands.literal("status").executes(this::status))
-                .then(Commands.literal("token").executes(this::token))
                 .then(Commands.literal("update").executes(this::update))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
@@ -167,21 +165,6 @@ public class WynntilsCommand extends Command {
                         () -> Component.translatable("command.wynntils.debug.profile.avg", average)
                                 .withStyle(ChatFormatting.AQUA),
                         false);
-    }
-
-    private int reauth(CommandContext<CommandSourceStack> context) {
-        context.getSource()
-                .sendSuccess(
-                        () -> Component.translatable("command.wynntils.reauth.tryReauth")
-                                .withStyle(ChatFormatting.GREEN),
-                        false);
-
-        Services.Hades.tryDisconnect();
-        Services.WynntilsAccount.reloadData();
-        Models.Player.reset();
-        // No need to try to re-connect to Hades, we will do that automatically when we get the new token
-
-        return 1;
     }
 
     private int refetch(CommandContext<CommandSourceStack> context) {
@@ -346,36 +329,6 @@ public class WynntilsCommand extends Command {
         return 1;
     }
 
-    private int token(CommandContext<CommandSourceStack> context) {
-        if (!Services.WynntilsAccount.isLoggedIn()) {
-            MutableComponent failed = Component.literal(
-                            "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
-                    .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reauth")
-                    .withStyle(Style.EMPTY
-                            .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(new ClickEvent.RunCommand("/wynntils reauth"))));
-            context.getSource().sendFailure(failed);
-            return 1;
-        }
-
-        String token = Services.WynntilsAccount.getToken();
-
-        MutableComponent text = Component.literal("Wynntils Token ").withStyle(ChatFormatting.AQUA);
-        MutableComponent response = Component.literal(token)
-                .withStyle(Style.EMPTY
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click me to register an account.")))
-                        .withClickEvent((new ClickEvent.OpenUrl(URI.create(
-                                Managers.Url.buildUrl(UrlId.LINK_WYNNTILS_REGISTER_ACCOUNT, Map.of("token", token))))))
-                        .withColor(ChatFormatting.DARK_AQUA)
-                        .withUnderlined(true));
-        text.append(response);
-
-        context.getSource().sendSuccess(() -> text, false);
-
-        return 1;
-    }
-
     private int update(CommandContext<CommandSourceStack> context) {
         if (WynntilsMod.isDevelopmentEnvironment()) {
             context.getSource()
@@ -444,10 +397,8 @@ public class WynntilsCommand extends Command {
         describeWynntilsSubcommand(text, "donate", "Provides a link to our Patreon");
         describeWynntilsSubcommand(text, "help", "List of all available commands for Wynntils");
         describeWynntilsSubcommand(text, "menu", "Opens Wynntils Menu");
-        describeWynntilsSubcommand(text, "reauth", "Re-authorize Wynntils online services (Athena and Hades)");
         describeWynntilsSubcommand(text, "reloadcaches", "Clear and re-download caches of online data");
         describeWynntilsSubcommand(text, "status", "Show Wynntils server status");
-        describeWynntilsSubcommand(text, "token", "Provide a link for creating a Wynntils account");
         describeWynntilsSubcommand(text, "update", "Update Wynntils to the latest version");
         describeWynntilsSubcommand(text, "version", "Shows the version of Wynntils currently installed");
 

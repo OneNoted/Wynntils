@@ -7,7 +7,6 @@ package com.wynntils.models.players;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -23,16 +22,13 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.secrets.type.WynntilsSecret;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.TimedSet;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -46,35 +42,13 @@ public final class PlayerModel extends Model {
             .registerTypeHierarchyAdapter(WynnPlayerInfo.class, new WynnPlayerInfo.WynnPlayerInfoDeserializer())
             .registerTypeHierarchyAdapter(CharacterData.class, new CharacterData.CharacterDataDeserializer())
             .create();
-    private static final String ATHENA_USER_NOT_FOUND = "User not found";
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_([A-Z]+)(\\d+)$");
 
-    // If there is a failure with the API, give it time to recover
-    private static final int ERROR_TIMEOUT_MINUTE = 5;
-
-    // Max amount of overall lookup errors
-    private static final int MAX_ERRORS = 5;
-
-    // Max amount of errors for a single user,
-    // before disabling lookups for them
-    private static final int MAX_USER_ERRORS = 3;
-
-    private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
-    private final Set<UUID> usersWithoutWynntilsAccount = ConcurrentHashMap.newKeySet();
-    private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
 
-    // The size of this set is the count of errors in the last ERROR_TIMEOUT_MINUTE minutes.
-    // This is used to avoid spamming the API.
-    private final TimedSet<Object> errors =
-            new TimedSet<>(ERROR_TIMEOUT_MINUTE, TimeUnit.MINUTES, true, ConcurrentHashMap::newKeySet);
-    private final Map<UUID, Integer> userFailures = new ConcurrentHashMap<>();
-
     public PlayerModel() {
         super(List.of());
-        errors.clear();
-        userFailures.clear();
     }
 
     // Returns true if the player is on the same server and is not a npc
@@ -118,14 +92,12 @@ public final class PlayerModel extends Model {
             return uuid;
         } else {
             // Ghost players have their UUIDs converted to version 2; convert it back
-            UUID uuidV4 =
-                    new UUID((uuid.getMostSignificantBits() & ~0xF000L) | 0x4000L, uuid.getLeastSignificantBits());
-            return uuidV4;
+            return new UUID((uuid.getMostSignificantBits() & ~0xF000L) | 0x4000L, uuid.getLeastSignificantBits());
         }
     }
 
     public WynntilsUser getWynntilsUser(Player player) {
-        return users.getOrDefault(getUserUUID(player), null);
+        return null;
     }
 
     public Stream<String> getAllPlayerNames() {
@@ -133,9 +105,7 @@ public final class PlayerModel extends Model {
     }
 
     public void reset() {
-        fetching.clear();
-        errors.clear();
-        userFailures.clear();
+        clearNameMap();
     }
 
     @SubscribeEvent
@@ -147,7 +117,7 @@ public final class PlayerModel extends Model {
         if (event.getNewState() == WorldState.WORLD) {
             clearGhostCache();
 
-            // Lookup self info here as PlayerJoinedWorldEvent will only be posted for self when off world
+            // Keep our own name indexed even though Athena-backed metadata is disabled.
             loadSelf();
         }
     }
@@ -192,63 +162,11 @@ public final class PlayerModel extends Model {
         UUID uuid = player.getUUID();
         if (uuid == null) return;
 
-        // Remove old user data
-        users.remove(uuid);
-        usersWithoutWynntilsAccount.remove(uuid);
-        userFailures.remove(uuid);
-
         loadUser(uuid, player.getScoreboardName());
     }
 
     private void loadUser(UUID uuid, String userName) {
-        // Avoid fetching the same user multiple times
-        if (fetching.contains(uuid)) return;
-        if (users.containsKey(uuid) || usersWithoutWynntilsAccount.contains(uuid)) return;
-
-        // Call getEntries to clear old entries
-        if (errors.getEntries().size() >= MAX_ERRORS) {
-            // Athena is having problems, skip this
-            return;
-        }
-
-        if (userFailures.getOrDefault(uuid, 0) >= MAX_USER_ERRORS) {
-            // User has had too many failures, skip this
-            return;
-        }
-
-        fetching.add(uuid); // temporary, avoid extra loads
         nameMap.put(uuid, userName);
-
-        ApiResponse apiResponse =
-                Services.WynntilsAccount.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
-        apiResponse.handleJsonObject(
-                json -> {
-                    if (json.has("error") && json.get("error").getAsString().equals(ATHENA_USER_NOT_FOUND)) {
-                        // This user does not exist in our database, stop requesting it
-                        usersWithoutWynntilsAccount.add(uuid);
-                        fetching.remove(uuid);
-                        return;
-                    }
-
-                    if (!json.has("user")) {
-                        fetching.remove(uuid);
-                        saveUserFailures(uuid, userName);
-                        return;
-                    }
-
-                    WynntilsUser user = WynntilsMod.GSON.fromJson(json.getAsJsonObject("user"), WynntilsUser.class);
-
-                    users.put(uuid, user);
-                    fetching.remove(uuid);
-
-                    // Schedule cape loading for next render tick
-                    McUtils.mc().execute(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
-                },
-                onError -> {
-                    errors.put(System.currentTimeMillis());
-
-                    saveUserFailures(uuid, userName);
-                });
     }
 
     public CompletableFuture<WynnPlayerInfo> getPlayer(String username) {
@@ -293,23 +211,6 @@ public final class PlayerModel extends Model {
                 onError -> future.complete(null));
 
         return future;
-    }
-
-    private void saveUserFailures(UUID uuid, String userName) {
-        userFailures.putIfAbsent(uuid, 0);
-        userFailures.compute(uuid, (k, v) -> v + 1);
-
-        // Only log the error once
-        // Call getEntries to clear old entries
-        if (errors.getEntries().size() == MAX_ERRORS) {
-            WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups temporarily.");
-        }
-
-        // Only log the error once
-        if (userFailures.get(uuid) == MAX_USER_ERRORS) {
-            WynntilsMod.error("Athena user lookup has repeating failures for user " + userName
-                    + ". Disabling future lookups for the user, until a reset.");
-        }
     }
 
     private void clearNameMap() {

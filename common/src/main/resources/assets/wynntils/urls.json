@@ -3,28 +3,6 @@
     "version": 13
   },
   {
-    "id": "apiAthenaAuthPublicKey",
-    "url": "https://athena.wynntils.com/auth/getPublicKey"
-  },
-  {
-    "arguments": [
-      "key",
-      "username",
-      "version"
-    ],
-    "id": "apiAthenaAuthResponse",
-    "method": "post",
-    "url": "https://athena.wynntils.com/auth/responseEncryption"
-  },
-  {
-    "arguments": [
-      "trace"
-    ],
-    "id": "apiAthenaTelemetryCrash",
-    "method": "post",
-    "url": "https://athena.wynntils.com/crash/report"
-  },
-  {
     "arguments": [
       "old_version",
       "new_version"
@@ -46,14 +24,6 @@
     ],
     "id": "apiAthenaUpdateCheck",
     "url": "https://athena.wynntils.com/version/latest/%{stream}"
-  },
-  {
-    "arguments": [
-      "uuid"
-    ],
-    "id": "apiAthenaUserInfo",
-    "method": "post",
-    "url": "https://athena.wynntils.com/user/getInfo"
   },
   {
     "arguments": [
@@ -376,13 +346,6 @@
   {
     "id": "linkWynntilsPatreon",
     "url": "https://www.patreon.com/Wynntils"
-  },
-  {
-    "arguments": [
-      "token"
-    ],
-    "id": "linkWynntilsRegisterAccount",
-    "url": "https://account.wynntils.com/register.php?token=%{token}"
   },
   {
     "id": "linkWynntilsStatus",

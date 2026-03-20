@@ -59,7 +59,6 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.embellishments.RemoveShinyGlintFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
-import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
 import com.wynntils.features.inventory.DisableRecipeBookFeature;
 import com.wynntils.features.inventory.DurabilityOverlayFeature;
@@ -168,7 +167,6 @@ import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.DownloadProgressFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
-import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
@@ -263,7 +261,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new RemoveShinyGlintFeature());
         registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
-        registerFeature(new WynntilsCosmeticsFeature());
         // endregion
 
         // region inventory
@@ -402,7 +399,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new DataCrowdSourcingFeature());
         registerFeature(new DownloadProgressFeature());
         registerFeature(new FixPacketBugsFeature());
-        registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new WeeklyConfigBackupFeature());
         registerFeature(new WynntilsHintMessagesFeature());

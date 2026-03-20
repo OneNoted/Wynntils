@@ -17,12 +17,8 @@ URL ids are build up like <TYPE>_<PROVIDER>_<NAME>, where <TYPE> is one of:
 of the kind of service, data or link this URL is dealing with.
  */
 public enum UrlId {
-    API_ATHENA_AUTH_PUBLIC_KEY("apiAthenaAuthPublicKey"),
-    API_ATHENA_AUTH_RESPONSE("apiAthenaAuthResponse"),
-    API_ATHENA_TELEMETRY_CRASH("apiAthenaTelemetryCrash"),
     API_ATHENA_UPDATE_CHANGELOG_V2("apiAthenaUpdateChangelogV2"),
     API_ATHENA_UPDATE_CHECK("apiAthenaUpdateCheck"),
-    API_ATHENA_USER_INFO("apiAthenaUserInfo"),
     API_GOOGLE_TRANSLATION("apiGoogleTranslation"),
     API_WIKI_DISCOVERY_QUERY("apiWikiDiscoveryQuery"),
     API_WIKI_QUEST_PAGE_QUERY("apiWikiQuestPageQuery"),
@@ -65,7 +61,6 @@ public enum UrlId {
     LINK_WYNNCRAFT_PLAYER_STATS("linkWynncraftPlayerStats"),
     LINK_WYNNTILS_DISCORD_INVITE("linkWynntilsDiscordInvite"),
     LINK_WYNNTILS_PATREON("linkWynntilsPatreon"),
-    LINK_WYNNTILS_REGISTER_ACCOUNT("linkWynntilsRegisterAccount"),
     LINK_WYNNTILS_STATUS("linkWynntilsStatus");
 
     private final String id;
